@@ -1,6 +1,7 @@
 // COMP 3123 Assignment 1
 // Zelda Pelletier
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 async function signup(req, res, next)
 {
@@ -21,4 +22,28 @@ async function signup(req, res, next)
         next(error);
     }
 }
-module.exports = { signup };
+async function login(req, res, next)
+{
+    try
+    {
+        const {username, email, password} = req.body;
+        const query = email ? {email} : {username};
+        const user = await User.findOne(query).select("+password");
+        if (!user)
+        {
+            return res.status(401).json({ status: false, message: "You Have Invalid credentials"});
+        }
+        const match = await bcrypt.compare(password, user.password);
+        if (!match)
+        {
+            return res.status(401).json({status: false, message: "You Have Invalid credentials"});
+        }
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
+        res.status(200).json({message: "Login successful", token});
+    }
+    catch (error)
+    {
+        next(error);
+    }
+}
+module.exports = {signup, login};

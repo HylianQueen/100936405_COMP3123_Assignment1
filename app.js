@@ -9,6 +9,6 @@ app.use(express.json());
 app.use("/api/v1/user", userRoutes);
 app.get("/health", (req, res) =>
 {
-    res.status(200).json({ status: "ok", message: "API is running" });
+    res.status(200).json({status: "ok", message: "API is running"});
 });
 module.exports = app;
