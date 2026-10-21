@@ -1,6 +1,7 @@
 // COMP 3123 Assignment 1
 // Zelda Pelletier
 const Employee = require("../models/Employee");
+const logger = require("../utils/logger");
 const fields = ["first_name", "last_name", "email", "position", "salary", "date_of_joining", "department"];
 async function findOwnedEmployee(eid, userId, res)
 {
@@ -12,6 +13,7 @@ async function findOwnedEmployee(eid, userId, res)
     }
     if (employee.user.toString() !== userId.toString())
     {
+        logger.warn("Forbidden: user " + userId + " tried employee " + eid);
         res.status(403).json({status: false, message: "You do not have access to this employee"});
         return null;
     }
@@ -37,6 +39,7 @@ async function createEmployee(req, res, next)
         fields.forEach((field) => {data[field] = req.body[field];});
         data.user = req.user.id;
         const employee = await Employee.create(data);
+        logger.info("Employee created by user " + req.user.id);
         res.status(201).json(employee);
     }
     catch (error)
