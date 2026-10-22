@@ -1130,7 +1130,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{auth_secret_0cxy}}",
+                  "value": "not.a.real.token",
                   "type": "string"
                 }
               ]
@@ -1968,10 +1968,6 @@
     {
       "key": "empB1",
       "value": ""
-    },
-    {
-      "key": "auth_secret_0cxy",
-      "secret": true
     }
   ]
 }
